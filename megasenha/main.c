@@ -1,3 +1,13 @@
+//!Main
+/*!Call interface_palavra_e_dica.h,interface_gui.h and *interface_controle.h.Start interface and show the winner player 
+*
+*
+*\author Douglas,Isabella,Thiago,Tiago
+*\since 04/07/14
+*\version 2.0
+*
+*
+*/
 #include "interface_palavra_e_dicas.h"
 #include "interface_gui.h"
 #include "interface_controle.h"
