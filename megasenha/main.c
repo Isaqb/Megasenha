@@ -4,14 +4,14 @@
 
 
 int main(int argc, char *argv[]) {
-  int playerVencedor = 1;
-  int scoreFirstRound = 0;
+  int playerVencedor = 1;//!< Integer of the nunber og the winner player
+  int scoreFirstRound = 0;//!< Integer of the score of the first round
   
-  playerVencedor = iniciaPrimeiraFase(argc, argv, &scoreFirstRound);
+  playerVencedor = iniciaPrimeiraFase(argc, argv, &scoreFirstRound);//!< Receive the winner player
   closeInterface();
   updateInterface();
-  printf("o player vencedor e %d\n", playerVencedor);
-  iniciaSegundaFase(argc, argv, playerVencedor, scoreFirstRound);
+  printf("o player vencedor e %d\n", playerVencedor);//!< Show the winner player
+  iniciaSegundaFase(argc, argv, playerVencedor, scoreFirstRound);//!<Started the second round
 }
 
 // TODO: add interface to add new words
