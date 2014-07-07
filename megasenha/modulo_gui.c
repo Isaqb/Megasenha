@@ -306,12 +306,12 @@ void createTextBox(Interface *gui, GtkWidget *frame)
 }
 
 void updateTimerLabel (GtkWidget **label, double timePassed) {
-    //calculates remaining time
-    char buf[50], *color;
+    
+    char buf[50], *color;/** <Calculates remaining time.*/
     int remainingTime = 15-timePassed;
 
-    // if less than five seconds left print red, else blue
-    if(remainingTime <= 5) {
+    
+    if(remainingTime <= 5) {/** <If less than five seconds left print red, else blue.*/
         color = "red";
     } else {
         color = "blue";
@@ -319,8 +319,8 @@ void updateTimerLabel (GtkWidget **label, double timePassed) {
 
     sprintf(buf, "<span foreground=\"%s\" font=\"25\">%d</span>", color, remainingTime);
 
-    // if time over and wrong answer print red, if right answer print OK! in green
-    if(remainingTime == 0) {
+    
+    if(remainingTime == 0) {/** <If time over and wrong answer print red, if right answer print OK! in green.*/
         color = "red";
         sprintf(buf, "<span foreground=\"%s\" font=\"42.5\">%s</span>", color, "X");
     }
@@ -330,37 +330,37 @@ void updateTimerLabel (GtkWidget **label, double timePassed) {
         remainingTime = 0;
     }
 
-    // sets timer text
-    gtk_label_set_markup(GTK_LABEL(*label), buf);
+    
+    gtk_label_set_markup(GTK_LABEL(*label), buf);/** <Sets timer text.*/
     gtk_widget_show(*label);
 }
 
 gboolean timerHandler(Interface *gui) {
-    // if application quit or stop time outs is on, return false to stop time out
-    if(quitApplication || stopTimeOuts[gui->player - 1] ) {
+    
+    if(quitApplication || stopTimeOuts[gui->player - 1] ) {/** <If application quit or stop time outs is on, return false to stop time out.*/
         stopTimeOuts[gui->player - 1] = 0;
         return FALSE;
     }
 
-    // gets difference between current and start time
-    time_t now;
+    
+    time_t now;/** <Gets difference between current and start time.*/
     double timePassed;
     now = time(NULL);
     timePassed = difftime(now, gui->startTime);
 
-    // if not waiting for answer anymore set time to 0 or (if answer was correct) -5
-    if(!gui->waitingForAnswer) {
+    
+    if(!gui->waitingForAnswer) {/** <If not waiting for answer anymore set time to 0 or (if answer was correct) -5.*/
         timePassed = 15;
         if(gui->gotCorrectAnswer) {
             timePassed = 20;
         }
     }
 
-    // update timer
-    updateTimerLabel(&(gui->timerLabel), timePassed);
+    
+    updateTimerLabel(&(gui->timerLabel), timePassed);/** <Update timer.*/
 
-    // if time over stop timeouts
-    if(timePassed >= 15) {
+    
+    if(timePassed >= 15) {/** <If time over stop timeouts.*/
         gui->waitingForAnswer = FALSE;
         return FALSE;
     }
@@ -368,45 +368,45 @@ gboolean timerHandler(Interface *gui) {
 }
 
 void startTimer(Interface *gui) {
-    // if stop time outs is on but there's no timeout running, set it to false
-    if(stopTimeOuts[gui->player - 1] ) {
+    
+    if(stopTimeOuts[gui->player - 1] ) {/** <If stop time outs is on but there's no timeout running, set it to false.*/
         stopTimeOuts[gui->player - 1] = 0;
     }
-    // sets starting time to current
-    gui->startTime = time(NULL);
     
-    // starts timeout to update timer every second and updates timerLabel to full time
-    g_timeout_add(1000, (GSourceFunc) timerHandler, (gpointer) gui);
+    gui->startTime = time(NULL);/** <Sets starting time to current.*/
+    
+    
+    g_timeout_add(1000, (GSourceFunc) timerHandler, (gpointer) gui);/** <Starts timeout to update timer every second and updates timerLabel to full time.*/
     updateTimerLabel(&(gui->timerLabel), 0);
 }
 
 void updateHintLabel (GtkWidget **label, char *newHint) {
-    // updates hint label in blue to new hint
-    char buf[50];
+    
+    char buf[50];/** <Updates hint label in blue to new hint.*/
     sprintf(buf, "<span foreground=\"blue\" font=\"20\">%s</span>", newHint);
 
     gtk_label_set_markup(GTK_LABEL(*label), buf);
 }
 
 void restartHints (Interface *gui, wordAndHints newWordAndHint) {
-    // restarts player stats for hints
-    gui->waitingForAnswer = TRUE;
+    
+    gui->waitingForAnswer = TRUE;/** <Restarts player stats for hints.*/
     gui->gotCorrectAnswer = FALSE;
     gui->wordAndHints = newWordAndHint;
     gui->numberOfHints = 1;
 
-    // updates first hint to new first and hides other two
-    updateHintLabel(&(gui->hintsLabel[0]), newWordAndHint.hints[0]);
+    
+    updateHintLabel(&(gui->hintsLabel[0]), newWordAndHint.hints[0]);/** <Updates first hint to new first and hides other two.*/
     updateHintLabel(&(gui->hintsLabel[1]), "---");
     updateHintLabel(&(gui->hintsLabel[2]), "---");
 }
 
 int newWord(int player, wordAndHints newWordAndHint) {
-    // brings player window to front and set focus to text entry box
-    gtk_widget_grab_focus(interfaces[player-1].inputTextBox);
+    
+    gtk_widget_grab_focus(interfaces[player-1].inputTextBox);/**<Brings player window to front and set focus to text entry box.*/
     gtk_window_present (GTK_WINDOW(interfaces[player-1].window));
-    // restarts interface (hint, timer and entry box)
-    gtk_entry_set_text (GTK_ENTRY(interfaces[player-1].inputTextBox), "");
+    
+    gtk_entry_set_text (GTK_ENTRY(interfaces[player-1].inputTextBox), "");/**<Restarts interface (hint, timer and entry box).*/
     restartHints(&interfaces[player-1], newWordAndHint); 
     startTimer(&interfaces[player-1]);
     restartHints(&interfaces[player-1], newWordAndHint); 
@@ -414,13 +414,13 @@ int newWord(int player, wordAndHints newWordAndHint) {
 }
 
 int updateInterface(void) {
-    //while changes to do and application hasn't been closed update
-    while (!quitApplication && gtk_events_pending ()) {
+    
+    while (!quitApplication && gtk_events_pending ()) {/**<While changes to do and application hasn't been closed update.*/
         gtk_main_iteration ();
     }
 
-    // return if application still working
-    return !quitApplication;
+    
+    return !quitApplication;/** <Return if application still working*/
 }
 /**Funtion integer waintingPlayer
  * Returns true if any player still guessing.
